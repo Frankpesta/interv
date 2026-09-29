@@ -4,6 +4,7 @@ import { IPC, type AppState, type CopilotApi } from '../shared/ipc'
 const api: CopilotApi = {
   getState: () => ipcRenderer.invoke(IPC.appGetState),
   setOverlayVisible: (visible) => ipcRenderer.invoke(IPC.overlaySetVisible, visible),
+  rebindHotkey: (action, accelerator) => ipcRenderer.invoke(IPC.hotkeyRebind, action, accelerator),
   onState: (listener) => {
     const handler = (_event: IpcRendererEvent, state: AppState): void => listener(state)
     ipcRenderer.on(IPC.appState, handler)

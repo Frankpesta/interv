@@ -3,6 +3,12 @@ import { createRoot } from 'react-dom/client'
 import { Button } from '@/components/ui/button'
 import { useControlStore } from './store'
 import '../styles.css'
+import type { OverlayHotkey } from '../../shared/config'
+
+const shortcutLabels: Record<OverlayHotkey, string> = {
+  panic: 'Hide / show', clickThrough: 'Click-through', moveUp: 'Move up', moveDown: 'Move down',
+  moveLeft: 'Move left', moveRight: 'Move right', smaller: 'Make smaller', larger: 'Make larger'
+}
 
 function Control(): React.JSX.Element {
   const { app, error, setApp, setError } = useControlStore()
@@ -22,6 +28,13 @@ function Control(): React.JSX.Element {
     try { setApp(await window.api.setOverlayVisible(!app.overlayVisible)) }
     catch { setError('The overlay could not be updated. Please try again.') }
     finally { setBusy(false) }
+  }
+  async function rebind(action: OverlayHotkey, form: HTMLFormElement): Promise<void> {
+    const accelerator = new FormData(form).get('accelerator')
+    if (typeof accelerator !== 'string') return
+    setError(null)
+    try { setApp(await window.api.rebindHotkey(action, accelerator)) }
+    catch { setError('That shortcut is unavailable or invalid. Try a different key combination; the previous binding is unchanged.') }
   }
   return <main className="mx-auto max-w-5xl px-10 py-9">
     <header className="flex items-center justify-between border-b border-border pb-6">
@@ -43,12 +56,22 @@ function Control(): React.JSX.Element {
       <section className="rounded-2xl border border-border bg-white p-6">
         <h2 className="text-lg font-semibold">Build progress</h2>
         <ol className="mt-5 space-y-5 text-sm">
-          <li className="flex gap-3"><span className="text-primary">01</span><div><p className="font-medium">Desktop foundation</p><p className="mt-1 text-xs text-stone-500">Current stage · acceptance checks pending</p></div></li>
-          <li className="flex gap-3 text-stone-500"><span>02</span><div><p>Overlay validation</p><p className="mt-1 text-xs">Capture and focus checks</p></div></li>
+          <li className="flex gap-3"><span className="text-primary">01</span><div><p className="font-medium">Desktop foundation</p><p className="mt-1 text-xs text-stone-500">Verified</p></div></li>
+          <li className="flex gap-3 text-stone-500"><span>02</span><div><p>Overlay validation</p><p className="mt-1 text-xs">Current stage · capture and focus checks pending</p></div></li>
           <li className="flex gap-3 text-stone-500"><span>03</span><div><p>Context & answers</p><p className="mt-1 text-xs">Screenshot responses, then live audio</p></div></li>
         </ol>
       </section>
     </div>
+    <section className="mt-5 rounded-2xl border border-border bg-white p-6">
+      <h2 className="text-lg font-semibold">Overlay shortcuts</h2>
+      <p className="mt-2 text-xs text-stone-500">Click-through is {app?.clickThrough ? 'on' : 'off'}. Shortcut changes last until you quit the app.</p>
+      <div className="mt-4 grid gap-3 md:grid-cols-2">
+        {app?.shortcuts.map((shortcut) => <form key={`${shortcut.action}-${shortcut.accelerator}`} className="flex flex-wrap items-end gap-2" onSubmit={(event) => { event.preventDefault(); void rebind(shortcut.action, event.currentTarget) }}>
+          <label className="min-w-0 flex-1 text-xs"><span className={shortcut.registered ? 'text-stone-600' : 'text-red-700'}>{shortcutLabels[shortcut.action]} · {shortcut.registered ? 'Active' : 'Unavailable'}</span><input name="accelerator" aria-label={`${shortcutLabels[shortcut.action]} shortcut`} defaultValue={shortcut.accelerator} maxLength={80} required className="mt-1 block h-9 w-full rounded-lg border border-border bg-background px-2 text-sm focus-visible:outline-primary" /></label>
+          <Button type="submit" variant="outline" size="sm">Set</Button>
+        </form>)}
+      </div>
+    </section>
     {error && <p role="alert" className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-800">{error}</p>}
     <footer className="mt-7 space-y-2 text-xs leading-5 text-stone-500">
       <p>No audio is being captured. AI providers are not connected. Close this window to keep the app in the tray; use tray Quit to exit.</p>

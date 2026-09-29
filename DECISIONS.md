@@ -28,3 +28,18 @@
 
 - User confirmed: "Overlay visible; tray Open and Quit both work" after testing the open app. Together with the checks above, this completes Gate 0. Proceed to Phase 1 only.
 - ESLint 10 is supported by both installed TypeScript ESLint and React hooks plugin peer ranges. Upgrade from deprecated ESLint 9 before committing the foundation.
+
+## 2026-09-29 — Phase 1 implementation and verification
+
+- Phase 0 committed as 3b8e880. Implemented overlay hide/show, click-through, movement, bounded resizing, tray click-through, and session-only shortcut rebinding. Added Ctrl+Alt+Shift+Up/Down for resizing during the gate checks; permanent configuration persistence remains Phase 5.
+- The overlay remains non-focusable in pointer-interactive mode. Position/size changes use native window methods without show/focus calls. Invalid or occupied accelerators preserve the old registration and display an inline control-window error.
+- Added scripts/focus-test.html with a typing area and blur/visibility log. It performs no network calls or recording.
+- Phase 1 TypeScript/build passed after fixing declaration order in shared/config.ts. Lint passed again during resumed verification.
+- Live UI checks: all eight shortcuts Active; Ctrl+Shift+H changed Hidden to Visible; Ctrl+Shift+M changed click-through on to off and back on. Attempting to assign the click-through accelerator to hide/show was rejected with an inline error. Restored the form to Ctrl+Shift+H; registration remained unchanged. Successful alternate rebinding is not yet verified.
+- Browser automation refused the local file URL under its protocol policy. No alternative browser surface or bypass was attempted. Requested user-run browser focus and real capture tests, including fullscreen, movement, and resizing, as required by BUILD_PLAN.md.
+- Gate 1 remains pending those observations. No Phase 2 provider work has started. The running app is left with overlay visible and click-through on for manual verification.
+
+## 2026-09-29 — Gate 1 user acceptance
+
+- User confirmed: "All checks pass — I’ll provide the setup details" in response to the full browser focus, recording, sharing, fullscreen, move/resize checklist. Gate 1 behavior accepted based on that report; Windows kernel 10.0.26200 and Electron 44.4.5 are known. Browser/recorder versions and monitor scaling remain to be supplied as test metadata.
+- Proceed to Phase 2. Successful alternate shortcut rebinding remains an additional smoke check, not a claim covered by this acceptance.

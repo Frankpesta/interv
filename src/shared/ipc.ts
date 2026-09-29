@@ -1,4 +1,4 @@
-import { IPC, HOTKEYS } from './config'
+import { IPC, HOTKEYS, type OverlayHotkey } from './config'
 export { IPC }
 
 export type AudioChannel = 'interviewer' | 'user'
@@ -9,6 +9,8 @@ export interface AppState {
   phase: number
   overlayVisible: boolean
   listening: boolean
+  clickThrough: boolean
+  shortcuts: Array<{ action: OverlayHotkey; accelerator: string; registered: boolean }>
 }
 export interface AudioFrame { channel: AudioChannel; pcm16: ArrayBuffer; ts: number }
 export interface AudioVad { channel: AudioChannel; event: 'start' | 'end' }
@@ -25,5 +27,6 @@ export interface AnswerState {
 export interface CopilotApi {
   getState(): Promise<AppState>
   setOverlayVisible(visible: boolean): Promise<AppState>
+  rebindHotkey(action: OverlayHotkey, accelerator: string): Promise<AppState>
   onState(listener: (state: AppState) => void): () => void
 }

@@ -1,6 +1,6 @@
 # Interview Copilot
 
-Personal Windows desktop assistant. **Phase 0 scaffold:** control window, placeholder overlay, typed IPC, and system tray. Audio, AI, context editing, and global shortcuts are not enabled yet.
+Personal Windows desktop assistant. **Phase 1 overlay validation:** control window, placeholder overlay, typed IPC, system tray, and overlay shortcuts. Phase 0 is verified. Audio, AI, and context editing are not enabled yet.
 
 ## Development
 
@@ -28,9 +28,15 @@ npm run preview
 
 Follow [the acceptance checklist](scripts/dry-run.md) and record results in [DECISIONS.md](DECISIONS.md). No automated check proves screen-capture exclusion or absence of focus theft on the target machine.
 
-## Planned hotkeys
+## Overlay hotkeys available now
 
-These defaults are defined but **not registered in Phase 0**.
+Hide/show (Ctrl+Shift+H), click-through (Ctrl+Shift+M), and movement (Ctrl+Alt+arrows) are active. Resize with Ctrl+Alt+Shift+Up / Down. The overlay always remains non-focusable, including when click-through is off. Use the control window to rebind shortcuts; unavailable combinations show an error and preserve the previous binding. Changes last until app exit; persistence is planned for Phase 5.
+
+To verify browser focus, open `scripts/focus-test.html` in your browser, click **Reset and focus**, and keep typing while exercising all overlay shortcuts. The log should remain empty. Separately check real full-display recording, browser display/tab sharing, and maximized/fullscreen behavior. See the acceptance checklist for the complete gate.
+
+## Remaining planned hotkeys
+
+Only overlay actions described above are registered. Listening, screenshots, answers, scrolling, mode, and opacity controls below remain planned.
 
 | Action | Shortcut |
 |---|---|

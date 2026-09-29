@@ -16,6 +16,10 @@ Record actual observations in DECISIONS.md. Unchecked means unverified, not pass
 
 ## Gate 1 — required before provider features
 
+- [x] All eight overlay shortcuts register on this machine.
+- [x] Hide/show and click-through hotkeys update the running application.
+- [x] A colliding shortcut is rejected non-modally and preserves the previous binding.
+- [ ] Successful alternate shortcut binding verified.
 - [ ] Record Windows build, Electron version, monitor layout/scaling, and recorder/browser versions.
 - [ ] Overlay stays absent from real full-display recordings while physically visible.
 - [ ] Browser full-screen sharing and tab sharing checked separately.
@@ -23,5 +27,7 @@ Record actual observations in DECISIONS.md. Unchecked means unverified, not pass
 - [ ] With a browser textbox active, all overlay hotkeys preserve typing focus.
 - [ ] Focus-test page records no blur/visibility changes during those hotkeys.
 - [ ] Maximized/fullscreen behavior verified.
+
+Open `scripts/focus-test.html` directly in a browser for the typing/focus checks. Hide/show: Ctrl+Shift+H; click-through: Ctrl+Shift+M; move: Ctrl+Alt+arrows; resize: Ctrl+Alt+Shift+Up / Down. Restore click-through to on after testing. Record browser/recorder versions and display scaling with the outcomes. Passing desktop state checks alone does not pass Gate 1.
 
 Later phases extend this checklist with provider, audio, recovery, long-session, and installed-build checks.

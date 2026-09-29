@@ -6,6 +6,7 @@ import { createOverlayWindow } from './windows/overlay'
 import { loadRenderer } from './windows/load'
 import { registerIpc } from './ipc'
 import { createTray } from './tray'
+import { createOverlayControls } from './hotkeys'
 
 app.setName(APP_NAME)
 let quitting = false
@@ -22,19 +23,22 @@ else {
     control = createControlWindow(() => quitting)
     const overlay = createOverlayWindow()
     const getState = (): AppState => ({
-      version: app.getVersion(), phase: 0, overlayVisible: overlay.isVisible(), listening: false
+      version: app.getVersion(), phase: 1, overlayVisible: overlay.isVisible(), listening: false,
+      ...overlayControls.getState()
     })
     const broadcast = (): void => {
       for (const window of BrowserWindow.getAllWindows()) {
         if (!window.webContents.isDestroyed()) window.webContents.send(IPC.appState, getState())
       }
     }
-    disposeIpc = registerIpc(control, overlay, getState)
+    const overlayControls = createOverlayControls(overlay, broadcast)
+    disposeIpc = registerIpc(control, overlay, getState, overlayControls.rebind)
     overlay.on('show', broadcast)
     overlay.on('hide', broadcast)
     tray = createTray({
       openControl: () => { control?.restore(); control?.show() },
-      toggleOverlay: () => { if (overlay.isVisible()) overlay.hide(); else overlay.showInactive() },
+      toggleOverlay: overlayControls.toggleVisible,
+      toggleClickThrough: overlayControls.toggleClickThrough,
       quit: () => app.quit()
     })
     await Promise.all([loadRenderer(control, 'control'), loadRenderer(overlay, 'overlay')])
