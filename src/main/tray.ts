@@ -1,7 +1,7 @@
 import { Menu, nativeImage, Tray } from 'electron'
 import { APP_NAME } from '../shared/config'
 
-export function createTray(actions: { openControl(): void; toggleOverlay(): void; toggleClickThrough(): void; quit(): void }): Tray {
+export function createTray(actions: { openControl(): void; toggleOverlay(): void; toggleClickThrough(): void; toggleListening(): void; quit(): void }): Tray {
   // Locally generated 24px BGRA icon; no remote assets or icon font dependency.
   const pixels = Buffer.alloc(24 * 24 * 4)
   for (let y = 0; y < 24; y++) for (let x = 0; x < 24; x++) {
@@ -17,6 +17,7 @@ export function createTray(actions: { openControl(): void; toggleOverlay(): void
   tray.setContextMenu(Menu.buildFromTemplate([
     { label: 'Open control window', click: actions.openControl },
     { label: 'Show / hide overlay', click: actions.toggleOverlay },
+    { label: 'Start / stop listening', click: actions.toggleListening },
     { label: 'Toggle click-through', click: actions.toggleClickThrough },
     { type: 'separator' },
     { label: 'Quit', click: actions.quit }

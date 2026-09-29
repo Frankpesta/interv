@@ -43,3 +43,21 @@
 
 - User confirmed: "All checks pass — I’ll provide the setup details" in response to the full browser focus, recording, sharing, fullscreen, move/resize checklist. Gate 1 behavior accepted based on that report; Windows kernel 10.0.26200 and Electron 44.4.5 are known. Browser/recorder versions and monitor scaling remain to be supplied as test metadata.
 - Proceed to Phase 2. Successful alternate shortcut rebinding remains an additional smoke check, not a claim covered by this acceptance.
+
+## 2026-09-29 — Phase 2 and user-requested OpenAI support
+
+- Phase 1 committed as 1ae5de0. Implemented selected-display capture, PNG/downscale in memory, bounded context editor and electron-store persistence, screenshot/cancel/scroll hotkeys, streamed markdown with code highlighting, and truncation/error indicators.
+- User explicitly requested "Also allow using openAi key as well". This extends the original Anthropic-only decision: select Anthropic or OpenAI in saved settings; never silently fail over across providers. Credentials remain main-process-only environment variables for this development phase. Windows credential storage remains Phase 5.
+- Anthropic defaults verified against https://platform.claude.com/docs/en/models/overview: claude-sonnet-5-5 (coding), claude-haiku-4-5-20251001 (reserved spoken tier).
+- OpenAI implementation verified against https://developers.openai.com/api/docs/guides/streaming-responses, https://developers.openai.com/api/docs/guides/images-vision, and https://developers.openai.com/api/docs/models/gpt-6-sol. Default gpt-6-sol supports image input, streaming, and reasoning effort none. Use Responses with store=false; this is not a promise about provider-wide retention.
+- Cancellation invalidates the request before pending capture or late stream events can publish. Hiding cancels from the native window event, covering tray, hotkey, and control actions. New requests replace old ones. Only pre-output transient failures retry once, using the same image and context snapshot.
+- Main sends text deltas plus revisioned answer snapshots. The overlay uses revisioned snapshots to avoid hydration/subscription races. Output is bounded; links are noninteractive, remote images suppressed, raw HTML skipped. No provider errors, keys, transcript contents, or screenshot bytes are logged.
+- Verification: TypeScript, lint, and production build PASS. Nine offline tests PASS: replacement/cancel races, retry policy, truncation/error redaction, context limits, and OpenAI SDK request/SSE handling with a fake transport. Compiled UI and all 12 shortcut registrations observed; missing-key request correctly reported an inline error before capture.
+- Neither ANTHROPIC_API_KEY nor OPENAI_API_KEY was configured at verification time. No live screenshot was sent to either provider. Gate 2 latency, generated-code correctness, real midstream cancel, persistence smoke test, and capture/focus regressions remain pending. Audio work must wait for Gate 2 acceptance.
+
+## 2026-09-29 — Offline Phase 2 checkpoint
+
+- User will obtain API keys later. No further key request is needed until they indicate readiness.
+- Extracted screenshot request orchestration into a testable operation. It clones settings once, checks key readiness before capture, checks cancellation before and after capture, and retains the same image across a retry.
+- Added Anthropic SDK transport tests for streamed vision requests, token truncation, and authentication-error redaction. Added screenshot orchestration tests for missing keys, cancellation during capture, and retry snapshot isolation.
+- All 15 offline tests, TypeScript, lint, and build pass. This is a code checkpoint, not Gate 2 acceptance. Live provider and recording/focus checks remain deferred until keys are available; Phase 3 has not started.

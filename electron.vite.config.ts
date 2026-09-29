@@ -13,6 +13,7 @@ export default defineConfig({
       rollupOptions: {
         input: {
           control: resolve('src/renderer/control/index.html'),
+          audio: resolve('src/renderer/audio/index.html'),
           overlay: resolve('src/renderer/overlay/index.html')
         }
       }

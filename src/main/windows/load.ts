@@ -1,7 +1,7 @@
 import { app, type BrowserWindow } from 'electron'
 import { join } from 'node:path'
 
-export async function loadRenderer(window: BrowserWindow, page: 'control' | 'overlay'): Promise<void> {
+export async function loadRenderer(window: BrowserWindow, page: 'control' | 'overlay' | 'audio'): Promise<void> {
   window.webContents.setWindowOpenHandler(() => ({ action: 'deny' }))
   window.webContents.on('will-navigate', (event) => event.preventDefault())
   const devUrl = process.env.ELECTRON_RENDERER_URL

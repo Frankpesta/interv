@@ -1,0 +1,13 @@
+.overlay #root { height: 100vh; padding: 8px; }
+.overlay-card { display: flex; flex-direction: column; gap: 10px; height: 100%; border: 1px solid #ffffff26; border-radius: 12px; padding: 14px 18px; background: #24352ef2; color: #eef2ed; }
+.answer-content { font-size: 13px; line-height: 1.55; overflow-wrap: anywhere; scrollbar-width: thin; scrollbar-color: #809489 transparent; }
+.answer-content p, .answer-content pre, .answer-content ul, .answer-content ol { margin: 8px 0; }
+.answer-content ul, .answer-content ol { padding-left: 20px; }
+.answer-content ul { list-style: disc; }.answer-content ol { list-style: decimal; }
+.answer-content pre { overflow-x: auto; padding: 12px; border-radius: 8px; background: #17231e; }
+.answer-content code { font-family: Consolas, monospace; font-size: 12px; }
+.answer-content h1,.answer-content h2,.answer-content h3 { font-weight: 600; margin-top: 12px; }
+.hljs-keyword,.hljs-selector-tag,.hljs-literal { color: #bbbcfa; }
+.hljs-string,.hljs-title,.hljs-attr { color: #b1dbad; }
+.hljs-number,.hljs-built_in { color: #f1c88e; }
+.hljs-comment { color: #a0b2a7; }
