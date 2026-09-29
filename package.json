@@ -16,12 +16,17 @@
     "preview": "electron-vite preview"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "0.129.0",
     "@radix-ui/react-slot": "1.3.3",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
+    "dotenv": "18.0.4",
+    "electron-store": "11.0.2",
     "framer-motion": "13.4.6",
     "react": "19.3.0",
     "react-dom": "19.3.0",
+    "react-markdown": "10.1.0",
+    "rehype-highlight": "7.0.2",
     "tailwind-merge": "3.7.0",
     "zustand": "5.0.15"
   },
@@ -37,6 +42,7 @@
     "eslint": "10.11.0",
     "eslint-plugin-react-hooks": "7.1.1",
     "tailwindcss": "4.3.3",
+    "tsx": "4.23.15",
     "typescript": "5.9.3",
     "typescript-eslint": "8.71.0",
     "vite": "7.3.6"
